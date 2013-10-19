@@ -8,5 +8,5 @@ Thx a lot.
 
 long is the way and hard  that out of Hell leads up to light
 
-## Documents Status 
-* [![build status](https://github.com/yaphet/tools/status.png)](https://github.com/yaphet/tools)
+## Documents Status
+* [![build status](https://github.com/yaphet/tools.png?branch=master)](https://github.com/yaphet/tools)
