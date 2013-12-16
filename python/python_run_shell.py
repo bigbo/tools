@@ -15,7 +15,7 @@ import tempfile
 import traceback
 import subprocess
 
-#此包对于进行shell命令的延时处理使用的是非多线程机制,使用所有包和函数均为python基本包,显示的封装成两个函数
+#此包对于进行shell命令的延时处理使用的是非多线程机制(相对EasyProcess这个python包),使用所有包和函数均为python基本包,显示的封装成两个函数,解决的问题是新增命令超时的设置方法,解决了其他方法的僵尸进程的问题.
 #
 #1.shell_2_tty(_cmd=cmds, _cwd=None, _timeout=10*60)
 #_cmd 是要执行的外面命令行，要是一个 list， 如果是str，shell=True，会启动一个新的shell去干活的，这样，不利于进程的控制
