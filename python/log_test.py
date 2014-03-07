@@ -42,11 +42,10 @@ class Logger(object):
 
 if __name__ == '__main__':
     logger = Logger(logname='hahaha', loglevel=1, callfile=__file__).get_logger()  
+    logger.debug('test level1')
     logger.info('test level1')
-    logger.info('test level1')
-    logger.info('test level1')
-    logger.info('test level1')
-    logger.info('test level1')
+    logger.warning('test level1')
+    logger.error('test level1')
     logger1 = Logger(logname='hahaha2', loglevel=5, callfile=__file__).get_logger()
     logger1.info('test level2')
     '''
