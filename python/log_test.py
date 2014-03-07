@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -#- coding: UTF-8 -*-
 #/*******************************************************************************
 # * Author	 : jingbo.li | work at renren-inc.
 # * Email	 : ljb90@live.cn
@@ -5,8 +7,6 @@
 # * Filename	 : log_test.py
 # * Description	 : 
 # * *****************************************************************************/
-#!/usr/bin/python
-#coding=utf-8
 
 import  logging
 import logging.config
@@ -43,7 +43,11 @@ class Logger(object):
 if __name__ == '__main__':
     logger = Logger(logname='hahaha', loglevel=1, callfile=__file__).get_logger()  
     logger.info('test level1')
-    logger1 = Logger(logname='hahaha2', loglevel=2, callfile=__file__).get_logger()
+    logger.info('test level1')
+    logger.info('test level1')
+    logger.info('test level1')
+    logger.info('test level1')
+    logger1 = Logger(logname='hahaha2', loglevel=5, callfile=__file__).get_logger()
     logger1.info('test level2')
     '''
     logger2 = Logger(logname='hahaha3', loglevel=3, callfile=__file__).get_logger()
