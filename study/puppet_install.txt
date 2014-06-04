@@ -1,0 +1,78 @@
+一.安装环境:
+1.两台服务器(centos5.7),ip地址分别是 192.168.1.111 (server)和 192.168.1.222(client)
+2.有外网且两台机器网络互通
+
+二.安装步骤:
+1.server端配置: 
+  a.设置主机名
+    vim /etc/hosts
+    (eg:192.168.1.111 server.puppet.com server)
+
+  b.服务器端安装相关的软件包
+    #add EPEL for deps not in puppetlabs repo. 
+    #rpm -Uvh http://download.fedora.redhat.com/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
+    rpm -ivh http://mirror.chpc.utah.edu/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
+
+  c.yum -y install puppet-server facter ruby ruby-libs ruby-shadow
+
+  d.yum安装puppet成功,先启动服务,查看安装成功否
+    service puppetmaster start
+
+2.client端配置
+  a.设置主机名
+    vim /etc/hosts
+    (eg:192.168.1.222 client.puppet.com)
+
+  b.设置hosts
+    vim /etc/hosts
+    (添加eg:192.168.1.111 server.puppet.com)
+
+  c.服务器端安装相关的软件包(同1.b)
+    #add EPEL for deps not in puppetlabs repo. 
+    #rpm -Uvh http://download.fedora.redhat.com/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
+    rpm -ivh http://mirror.chpc.utah.edu/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
+
+  d.yum -y install puppet
+
+3.申请并签发证书
+  a.客户端操作
+    puppetd --test --server server.puppet.com
+  (显示:
+   info: Creating a new SSL key for client.puppet.com
+   warning: peer certificate won't be verified in this SSL session
+   info: Caching certificate for ca
+   warning: peer certificate won't be verified in this SSL session
+   warning: peer certificate won't be verified in this SSL session
+   info: Creating a new SSL certificate request for client.puppet.com
+   info: Certificate Request fingerprint (md5): 38:36:3B:A7:0A:87:F0:45:38:69:60:51:8E:DD:C5:90
+   warning: peer certificate won't be verified in this SSL session
+   warning: peer certificate won't be verified in this SSL session
+   warning: peer certificate won't be verified in this SSL session
+   Exiting; no certificate found and waitforcert is disabled)
+
+  b.服务器端操作
+    puppetca -l    //查看客户端的证书申请
+
+  c.签发客户端证书申请
+    puppetca -s client.puppet.com
+
+  d.客户端操作
+    puppetd --test --server server.puppet.com //客户端取回签发后的证书
+    (显示:
+     .........
+     notice: Finished catalog run in 0.02 seconds)
+
+4.测试
+  a.在服务端编写执行
+    vim /etc/puppet/manifests/site.pp
+    添加:
+     file { "/tmp/temp1.txt":
+      content => "Hello World\n";
+      }
+
+  b.在客户端执行
+    puppetd --test --server server.puppet.com
+
+  d.客户端查看是否成功创建
+    cat /tmp/temp1.txt
+
