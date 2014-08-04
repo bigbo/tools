@@ -23,6 +23,13 @@ set iskeyword+=_,$,@,%,#,-
 " 语法高亮
 syntax on 
 
+" 启动的时候不显示那个援助索马里儿童的提示
+set shortmess=atI
+
+"设置 退出vim后，内容显示在终端屏幕, 可以用于查看和复制
+""好处：误删什么的，如果以前屏幕打开，可以找回
+set t_ti= t_te=
+
 " 高亮字符，让其不受100列限制
 :highlight OverLength ctermbg=red ctermfg=white guibg=red guifg=white 
 :match OverLength '\%101v.*'
@@ -31,7 +38,19 @@ syntax on
 highlight StatusLine guifg=SlateBlue guibg=Yellow 
 highlight StatusLineNC guifg=Gray guibg=White
 
+"==========================================
+"" Display Settings 展示/排版等界面格式设置
+"==========================================
+"
+""在状态栏显示正在输入的命令
+set showcmd
+" 左下角显示当前vim模式
+set showmode
 
+" " 在上下移动光标时，光标的上方或下方至少会保留显示的行数
+set winwidth=79
+" 命令行（在状态行下）的高度，默认为1，这里是2
+set statusline=%<%f\ %h%m%r%=%k[%{(&fenc==\"\")?&enc:&fenc}%{(&bomb?\",BOM\":\"\")}]\ %-14.(%l,%c%V%)\ %P
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" 
 " 文件设置 
@@ -50,7 +69,6 @@ set rulerformat=%20(%2*%<%f%=\ %m%r\ %3l\ %c\ %p%%%)
 " 命令行（在状态行下）的高度，默认为1，这里是2 
 set cmdheight=2
 
-
 " 使回格键（backspace）正常处理indent, eol, start等 
 set backspace=2
 
@@ -61,6 +79,9 @@ set whichwrap+=<,>,h,l
 set mouse=a 
 set selection=exclusive 
 set selectmode=mouse,key
+
+" 缩进时，取整 use multiple of shiftwidth when indenting with '<' and '>'
+set shiftround   
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" 
 " 搜索和匹配 
@@ -95,6 +116,12 @@ set statusline=%F%m%r%h%w\[POS=%l,%v][%p%%]\%{strftime(\"%d/%m/%y\ -\%H:%M\")}
 " 总是显示状态行 
 set laststatus=2
 
+" Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
+map <space> /
+" 进入搜索Use sane regexes"
+nnoremap / /\v
+vnoremap / /\v
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" 
 " 文本格式和排版 
@@ -122,10 +149,14 @@ set shiftwidth=4
 set expandtab 
 
 " 不要换行 
-" set nowrap 
+set nowrap 
 
 " 在行和段开始处使用制表符 
 " set smarttab
+
+" Go to home and end using capitalized directions
+noremap H ^
+noremap L $
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" 
 " Autocommands 
@@ -144,29 +175,6 @@ if has("autocmd")
 				\ endif 
 endif "has("autocmd") 
 
-" F5编译和运行C程序，F6编译和运行C++程序 
-" 请注意，下述代码在windows下使用会报错 
-" 需要去掉./这两个字符 
-" C的编译和运行 
-
-
-map <F5> :call CompileRunGcc()<CR> 
-func! CompileRunGcc() 
-	exec "w" 
-	exec "!gcc % -o %<" 
-	exec "! ./%<" 
-endfunc 
-
-" C++的编译和运行 
-
-map <F6> :call CompileRunGpp()<CR> 
-func! CompileRunGpp() 
-	exec "w" 
-	exec "!g++ % -o %<" 
-	exec "! ./%<" 
-endfunc 
-
-
 " 能够漂亮地显示.NFO文件 
 
 set encoding=utf-8 
@@ -183,6 +191,26 @@ au BufReadPre *.nfo call SetFileEncodings('cp437')|set ambiwidth=single au BufRe
 
 "colorscheme koehler 
 colorscheme ron
+
+"==========================================
+"" HotKey Settings  自定义快捷键设置
+"==========================================
+
+""为方便复制，用<F2>开启/关闭行号显示:
+function! HideNumber()
+    if(&relativenumber == &number)
+        set relativenumber! number!
+    elseif(&number)
+        set number!
+    else
+        set relativenumber!
+    endif
+    set number?
+endfunc
+nnoremap <F2> :call HideNumber()<CR>
+
+" F3 显示可打印字符开关
+nnoremap <F3> :set list! list?<CR>
 
 "将键盘上的F4功能键映射为添加作者信息的快捷键
 map <F4> ms:call TitleDet()<cr>'s
@@ -226,6 +254,35 @@ function TitleDet()
 endfunction
 
 
+" F5编译和运行C程序，F6编译和运行C++程序 
+" 请注意，下述代码在windows下使用会报错 
+" 需要去掉./这两个字符 
+" C的编译和运行 
+
+map <F5> :call CompileRunGcc()<CR> 
+func! CompileRunGcc() 
+	exec "w" 
+	exec "!gcc % -o %<" 
+	exec "! ./%<" 
+endfunc 
+
+" C++的编译和运行 
+
+map <F6> :call CompileRunGpp()<CR> 
+func! CompileRunGpp() 
+	exec "w" 
+	exec "!g++ % -o %<" 
+	exec "! ./%<" 
+endfunc 
+
+" F7 粘贴模式paste_mode开关,用于有格式的代码粘贴
+set pastetoggle=<F7>            "    when in insert mode, press <F5> to go to
+                                "    paste mode, where you can paste mass data
+                                "    that won't be autoindented
+                                
+" disbale paste mode when leaving insert mode
+au InsertLeave * set nopaste
+
 " 按F8按钮，在窗口的左侧出现taglist的窗口,像vc的左侧的workpace
 nnoremap <silent> <F8> :TlistToggle<CR><CR>
 " :Tlist              调用TagList
@@ -233,6 +290,46 @@ let Tlist_Show_One_File=0                    " 只显示当前文件的tags
 let Tlist_Exit_OnlyWindow=1                  " 如果Taglist窗口是最后一个窗口则退出Vim
 let Tlist_Use_Right_Window=1                 " 在右侧窗口中显示
 let Tlist_File_Fold_Auto_Close=1             " 自动折叠
+
+
+" F10 to run python script
+nnoremap <buffer> <F10> :exec '!python' shellescape(@%, 1)<cr>
+
+
+"==========================================
+" FileType Settings  文件类型设置
+"==========================================
+
+" Python 文件的一般设置，比如不要 tab 等
+autocmd FileType python set tabstop=4 shiftwidth=4 expandtab ai
+
+" 保存python文件时删除多余空格
+" Delete trailing white space on save, useful for Python and CoffeeScript ;)
+func! DeleteTrailingWS()
+  exe "normal mz"
+  %s/\s\+$//ge
+  exe "normal `z"
+endfunc
+autocmd BufWrite *.py :call DeleteTrailingWS()
+
+" 定义函数AutoSetFileHead，自动插入文件头
+autocmd BufNewFile *.sh,*.py exec ":call AutoSetFileHead()"
+function! AutoSetFileHead()
+    "如果文件类型为.sh文件
+    if &filetype == 'sh'
+        call setline(1, "\#!/bin/bash")
+    endif
+
+    "如果文件类型为python
+    if &filetype == 'python'
+        call setline(1, "\#!/usr/bin/env python")
+        call append(1, "\# encoding: utf-8")
+    endif
+
+    normal G
+    normal o
+    normal o
+endfunc
 
 " 使用ctags插件
 set tags=tags;
