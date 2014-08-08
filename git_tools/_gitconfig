@@ -1,0 +1,17 @@
+[user]
+	name = jingbo.li
+	email = ljb90@live.cn
+[core]
+	editor = vim
+[merge]
+	tool = vimdiff
+[color]
+	ui = true
+[push]
+	default = matching
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
