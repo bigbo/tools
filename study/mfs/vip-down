@@ -1,0 +1,9 @@
+#!/bin/sh
+IFACE=$1
+VIP=$2
+
+/sbin/ip addr del ${VIP}/24 dev ${IFACE}
+
+if [ -e "/data/mfs/var/mfs/.mfsmaster.lock" ]; then
+  /data/mfs/sbin/mfsmaster stop
+fi

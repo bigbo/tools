@@ -1,0 +1,31 @@
+#!/bin/sh
+IFACE=$1
+VIP=$2
+
+#
+#ifconfig ${IFACE}:ucarp ${VIP} up netmask 255.255.255.0
+
+#
+/sbin/ip addr add ${VIP}/24 dev ${IFACE}
+
+#
+MFS='/data/mfs/var/mfs'
+if [ -e "$MFS/metadata_ml.mfs.back" -a -e "$MFS/sessions_ml.mfs" ]; then
+  #
+  time /data/mfs/sbin/mfsmetalogger stop
+
+  #
+  time /data/mfs/sbin/mfsmetarestore -a
+  if [ "$?" != "0" ]; then
+    echo 'restore failed return value:' $?
+    exit 1
+  fi
+
+  mv -f $MFS/sessions_ml.mfs $MFS/sessions.mfs
+
+  # remove old metalogger change logs
+  mkdir -p $MFS/metalogs
+  mv $MFS/*_ml* $MFS/metalogs
+
+  /data/mfs/sbin/mfsmaster start
+fi
