@@ -76,7 +76,7 @@ set backspace=2
 set whichwrap+=<,>,h,l
 
 " 可以在buffer的任何地方使用鼠标（类似office中在工作区双击鼠标定位） 
-set mouse=a 
+set mouse=v 
 set selection=exclusive 
 set selectmode=mouse,key
 
@@ -105,7 +105,7 @@ set incsearch
 set listchars=tab:\|\ ,trail:.,extends:>,precedes:<,eol:$ 
 
 " 光标移动到buffer的顶部和底部时保持3行距离 
-set scrolloff=3 
+set scrolloff=2 
 
 " 不要闪烁 
 set novisualbell 
@@ -148,8 +148,8 @@ set shiftwidth=4
 " 不要用空格代替制表符 
 set expandtab 
 
-" 不要换行 
-set nowrap 
+" 要换行 
+set wrap 
 
 " 在行和段开始处使用制表符 
 " set smarttab
@@ -216,8 +216,8 @@ nnoremap <F3> :set list! list?<CR>
 map <F4> ms:call TitleDet()<cr>'s
 function AddTitle()
         call append(0,"#/*******************************************************************************")
-        call append(1,"# * Author	 : jingbo.li | work at renren-inc.")
-        call append(2,"# * Email	 : jingbo.li@renren-inc.com")
+        call append(1,"# * Author	 : jingbo.li | work at new-inc.")
+        call append(2,"# * Email	 : jingbo.li@new.com")
         call append(3,"# * Last modified : ".strftime("%Y-%m-%d %H:%M"))
         call append(4,"# * Filename	 : ".expand("%:t"))
         call append(5,"# * Description	 : ")
