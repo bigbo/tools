@@ -3,8 +3,6 @@ from django import http
 import json
 from django.views.generic import View
 from Exceptions import APIError
-import time
-import uuid
 
 class JSONResponse(object):
     '''
@@ -43,20 +41,10 @@ class JSONResponse(object):
     def convert_context_to_json(self, context):
         return json.dumps(context)
 
-
 class CoreView(JSONResponse, View):
     '''
     所有API基类
     '''
-
-    def create_id(self):
-        '''
-        生成全局唯一id
-        '''
-        t = int(time.time()*1000)
-        mac = int(uuid.UUID(int=uuid.getnode()).hex[-12:], 16)
-        return t + mac
-
     def parameters(self, key):
         '''
         获取POST或者GET中的参数,POST参数如获取不到默认返回''
@@ -64,8 +52,8 @@ class CoreView(JSONResponse, View):
         if self.request.method == 'GET':
             return self.request.GET.get(key)
         if self.request.method == 'POST':
-            if key in json.loads(self.request.body.decode()):
-                return json.loads(self.request.body.decode()).get(key)
+            if key in json.loads(self.request.body.decode('utf-8')):
+                return json.loads(self.request.body.decode('utf-8')).get(key)
             else:
                 return ''
 

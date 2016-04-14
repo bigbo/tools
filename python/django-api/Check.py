@@ -11,7 +11,7 @@ def CheckParameters(fields=[], method='POST'):
         @wraps(f)
         def check(self, *args, **kwargs):
             if method == 'POST':
-                paraneters = json.loads(self.request.body.decode())
+                paraneters = json.loads(self.request.body.decode('utf-8'))
             if method == 'GET':
                 paraneters = self.request.GET
 
